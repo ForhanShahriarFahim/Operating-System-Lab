@@ -21,20 +21,22 @@ int main()
         turn += a.first;
         TurnOver[a.second] = turn;
     }
-    
+
     cout << "TASK :  ";
     for (int i = 1; i <= no_of_process; i++)
     {
         cout << i << " ";
-    }    
-    cout << endl<< "TURN :  ";
-    int turnAround=0,waitingTime=0;
+    }
+    cout << endl
+         << "TURN :  ";
+    int turnAround = 0, waitingTime = 0;
     for (int i = 1; i <= no_of_process; i++)
     {
         cout << TurnOver[i] << " ";
-        turnAround+=TurnOver[i];
+        turnAround += TurnOver[i];
     }
-    cout << endl<< "Wait :  ";
+    cout << endl
+         << "Wait :  ";
     for (int i = 1; i <= no_of_process; i++)
     {
         cout << TurnOver[i] - Burst_Time[i] << " ";
@@ -42,7 +44,7 @@ int main()
     }
 
     cout << endl;
-    cout << "AVG TURNOVER : " << double(turnAround)/no_of_process<<endl;
+    cout << "AVG TURNOVER : " << double(turnAround) / no_of_process << endl;
     cout << "AVG WAITING : " << double(waitingTime) / no_of_process << endl;
     cout
         << "THE GANTTCHART: " << endl
@@ -54,8 +56,7 @@ int main()
 }
 
 /*
-Input: 
-3 
-13 3 7 
+Input:
+3
+13 3 7
 */
-

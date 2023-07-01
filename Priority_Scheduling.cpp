@@ -1,113 +1,91 @@
-// Priority Scheduling Algorithm
+#include <bits/stdc++.h>
 
-#include "bits/stdc++.h"
 using namespace std;
-#define ll long long
-#define pb push_back
+
+struct process
+{
+    string id;
+    int burst, priority, waiting, turnaround;
+};
+
+bool compareProcess(process x, process y)
+{
+    return x.priority < y.priority;
+}
 
 int main()
 {
-    //freopen("PrioritySchedulingInput.txt", "r", stdin);
-    ll n, i, j, k, l, burst, priority;
-    string proc;
-    cin >> n;
+    int size;
+    cin >> size;
+    vector<process> x(size);
 
-    vector<ll> waitingTime(n), turnaroundTime(n), burstTime(n), BT(n), TAT(n), Priority(n);
-    vector<string> process;
-    vector<pair<ll, ll>> priorityTime;
-
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < size; i++)
     {
-        cin >> proc >> burst >> priority;
-        process.pb(proc);
-        burstTime[i] = burst;
-        priorityTime.pb({priority, i});
-        Priority[i] = priority;
+        cin >> x[i].id >> x[i].burst >> x[i].priority;
     }
-    sort(priorityTime.begin(), priorityTime.end());
+    sort(x.begin(), x.end(), compareProcess);
 
-    // Turnaround Time
+    int time_now = 0;
+    double avg_waiting = 0, avg_turnaround = 0;
+    vector<pair<string, int>> timeline;
 
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < size; i++)
     {
-        if (i == 0)
-            TAT[priorityTime[i].second] = burstTime[priorityTime[i].second];
+        time_now += x[i].burst;
+        timeline.push_back({x[i].id, time_now});
+        x[i].turnaround = time_now;
+        x[i].waiting = x[i].turnaround - x[i].burst;
+        avg_waiting += x[i].waiting;
+        avg_turnaround += x[i].turnaround;
+    }
+
+    string gantt_chart = "|", border = "-";
+    for (auto z : timeline)
+    {
+        gantt_chart += "  " + z.first + "  |";
+        border += "-------";
+    }
+    cout << "Gantt Chart:\n"
+         << border << "\n"
+         << gantt_chart << "\n"
+         << border << "\n"
+         << "0";
+
+    int index = 0;
+    for (int i = 1; gantt_chart[i]; i++)
+    {
+        if (gantt_chart[i] == '|')
+        {
+            cout << timeline[index].second;
+            if (timeline[index++].second >= 10)
+            {
+                i++;
+            }
+        }
         else
-            TAT[priorityTime[i].second] = TAT[priorityTime[i - 1].second] + burstTime[priorityTime[i].second];
-    }
-
-    for (i = 0; i < n; i++)
-        waitingTime[i] = TAT[i] - burstTime[i];
-
-    // Printing Gantt Chart
-
-    cout << "\nGantt Chart:\n";
-
-    // Prinint top bar
-    cout << " ";
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < burstTime[priorityTime[i].second]; j++)
-            cout << "--";
-        cout << " ";
-    }
-
-    // Printing process name
-    cout << "\n|";
-
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < burstTime[priorityTime[i].second] - 1; j++)
             cout << " ";
-        cout << process[priorityTime[i].second];
-        for (j = 0; j < burstTime[priorityTime[i].second] - 1; j++)
-            cout << " ";
-        cout << "|";
     }
 
-    // Printing bottom bar
-    cout << "\n ";
-    for (i = 0; i < n; i++)
+    cout << "\n\n"
+         << "Average waiting time = " << (double)avg_waiting / size << "\n"
+         << "Average turnaround time = " << (double)avg_turnaround / size << "\n\n"
+         << "Process   |   Waiting Time   |   Turnaround Time\n"
+         << "------------------------------------------------\n";
+    for (int i = 0; i < size; i++)
     {
-        for (j = 0; j < burstTime[priorityTime[i].second]; j++)
-            cout << "--";
-        cout << " ";
+        cout << x[i].id << "              "
+             << x[i].waiting << "                   "
+             << x[i].turnaround << "\n";
     }
-    cout << "\n";
-
-    // Printing turnaround time
-    cout << "0";
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < burstTime[priorityTime[i].second]; j++)
-            cout << "  ";
-        if (TAT[priorityTime[i].second] > 9)
-            cout << "\b"; // backspace : remove 1 space
-        cout << TAT[priorityTime[i].second];
-    }
-    cout << "\n\n";
-
-    cout << "Process\t\tBurst Time\tPriority\tWaiting Time\tTurnaround Time\n";
-    for (i = 0; i < n; i++)
-    {
-        cout << process[i] << "\t\t"
-             << burstTime[i] << "\t\t"
-             << Priority[i] << "\t\t"
-             << waitingTime[i] << "\t\t"
-             << TAT[i] << "\n";
-    }
-
-    // Average Waiting Time
-    ll sum = 0;
-    for (i = 0; i < n; i++)
-        sum += waitingTime[i];
-    cout << "\nAverage Waiting Time: " << (double)sum / n;
-
-    // Average Turnaround Time
-    sum = 0;
-    for (i = 0; i < n; i++)
-        sum += TAT[i];
-    cout << "\nAverage Turnaround Time: " << (double)sum / n;
-
-    return 0;
 }
+
+/*
+...............Input:
+5
+P1 10 3
+P2 1 1
+P3 2 4
+P4 1 5
+P5 5 2
+
+*/
