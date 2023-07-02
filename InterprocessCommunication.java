@@ -3,7 +3,7 @@ import java.time.LocalTime;
 public class InterprocessCommunication {
     public static volatile int shared = 0;
 
-    public static class Responce implements Runnable {
+    public static class Response implements Runnable {
 
         @Override
         public void run() {
@@ -36,10 +36,10 @@ public class InterprocessCommunication {
 
     public static void main(String[] args) {
         Request request = new Request();
-        Responce responce = new Responce();
+        Response Response = new Response();
         Thread request_thread = new Thread(request);
-        Thread responce_thread = new Thread(responce);
-        responce_thread.start();
+        Thread response_thread = new Thread(Response);
+        response_thread.start();
         request_thread.start();
     }
 }
