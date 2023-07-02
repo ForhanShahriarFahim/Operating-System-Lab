@@ -36,13 +36,14 @@ int main()
     // Main calculation
     int time = 0;
     vector<pair<string, int>> timeline;
+    double aveTurnaround = 0, aveWaiting = 0;
     while (true)
     {
         sort(x.begin(), x.end(), compareProcess);
         bool flag = false;
         for (int i = 0; i < size; i++)
         {
-            if (x[i].arrival <= time and x[i].burst)
+            if (x[i].arrival <= time && x[i].burst)
             {
                 x[i].burst--;
                 time++;
@@ -50,14 +51,18 @@ int main()
                 {
                     x[i].completion = time;
                     x[i].turnaround = x[i].completion - x[i].arrival;
+                    aveTurnaround += x[i].turnaround;
                     x[i].waiting = x[i].turnaround - x[i].backup;
+                    aveWaiting += x[i].waiting;
                 }
-                if (timeline.size() and timeline.back().first == x[i].id)
+                if (timeline.size() && timeline.back().first == x[i].id)
                 {
                     timeline.back().second = time;
                 }
                 else
+                {
                     timeline.push_back({x[i].id, time});
+                }                    
                 flag = true;
                 break;
             }
@@ -92,6 +97,9 @@ int main()
             cout << " ";
     }
 
+    cout<<"\n\nAverage Turnaround Time: "<<aveTurnaround/size<<endl;
+    cout<<"Average Waiting Time: "<<aveWaiting/size;
+
     // Average Waiting time, Turnaround time & Completion time output
     cout << "\n\nProcess | Waiting Time | Completion Time | Turnaround Time\n";
     cout << "----------------------------------------------------------\n";
@@ -108,15 +116,19 @@ int main()
     return 0;
 }
 
-// Slide's input
-// 4
-// P1 0 8
-// P2 1 4
-// P3 2 9
-// P4 3 5
+/*input
+4
+P1 0 8
+P2 1 4
+P3 2 9
+P4 3 5
+
+Average Turnaround Time: 13
+Average Waiting Time: 6.5
 
 // Slide's output
 // ------------------------------------
 // |  P1  |  P2  |  P4  |  P1  |  P3  |
 // ------------------------------------
 // 0      1      5      10     17    26
+*/
