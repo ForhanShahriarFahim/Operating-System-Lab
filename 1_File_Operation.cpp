@@ -13,19 +13,17 @@ int main()
     {
         string name;
         getline(cin, name);
-        //string prefix = "E:\\1. Academic\\3-2 Semester\\Operating System\\";
-        //name = prefix + name; 
-        ofstream newFile(name.c_str());
+        ofstream new_file(name.c_str());
         cout << "File successfully created";
-        newFile << "Hello World";
-        newFile.close();
+        new_file << "Hello World";
+        new_file.close();
     }
     else if (operation == "Rename")
     {
-        string oldname, newname;
-        getline(cin, oldname);
-        getline(cin, newname);
-        int mark = rename(oldname.c_str(), newname.c_str());
+        string old_name, new_name;
+        getline(cin, old_name);
+        getline(cin, new_name);
+        int mark = rename(old_name.c_str(), new_name.c_str());
         if (mark)
         {
             cout << "Error renaming file!";
@@ -35,9 +33,9 @@ int main()
     }
     else if (operation == "Delete")
     {
-        string fileName;
-        getline(cin, fileName);
-        int mark = remove(fileName.c_str());
+        string file_name;
+        getline(cin, file_name);
+        int mark = remove(file_name.c_str());
         if (mark)
         {
             cout << "Couldn't delete file!";
@@ -50,14 +48,14 @@ int main()
         string from, to;
         getline(cin, from);
         getline(cin, to);
-        ifstream sourceFile(from.c_str(), ios::binary);
-        ofstream destinationFile(to.c_str(), ios::binary);
+        ifstream source_file(from.c_str(), ios::binary);
+        ofstream destination_file(to.c_str(), ios::binary);
         string line;
-        if (sourceFile and destinationFile)
+        if (source_file and destination_file)
         {
-            while (getline(sourceFile, line))
+            while (getline(source_file, line))
             {
-                destinationFile << line << "\n";
+                destination_file << line << "\n";
             }
             cout << "File successfully copied";
         }
@@ -69,16 +67,16 @@ int main()
         string from, to;
         getline(cin, from);
         getline(cin, to);
-        ifstream sourceFile(from.c_str(), ios::binary);
-        ofstream destinationFile(to.c_str(), ios::binary);
+        ifstream source_file(from.c_str(), ios::binary);
+        ofstream destination_file(to.c_str(), ios::binary);
         string line;
-        if (sourceFile and destinationFile)
+        if (source_file and destination_file)
         {
-            while (getline(sourceFile, line))
+            while (getline(source_file, line))
             {
-                destinationFile << line << "\n";
+                destination_file << line << "\n";
             }
-            sourceFile.close(); //... Otherwise, can't delete
+            source_file.close(); //... Otherwise, can't delete
             cout << "File successfully moved";
             remove(from.c_str());
         }
@@ -89,43 +87,45 @@ int main()
         cout << "Invalid operation!";
 }
 
-/*//... Input Output:
-
-...............Input:
+/*//... Sample Input-Output:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Input:
 Create
-E:\\1. Academic\\3-2 Semester\\Operating System\\x.txt
-
-..............Output:
+F:\\C++ Codes\\Operating System Lab\\x.txt
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Output:
 File successfully created
-
-...............Input:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Input:
 Rename
-E:\\1. Academic\\3-2 Semester\\Operating System\\x.txt
-E:\\1. Academic\\3-2 Semester\\Operating System\\z.txt
-
-..............Output:
+F:\\C++ Codes\\Operating System Lab\\x.txt
+F:\\C++ Codes\\Operating System Lab\\z.txt
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Output:
 File successfully renamed
-
-...............Input:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Input:
 Delete
-E:\\1. Academic\\3-2 Semester\\Operating System\\z.txt
-
-..............Output:
+F:\\C++ Codes\\Operating System Lab\\z.txt
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Output:
 File successfully deleted
-
-...............Input:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Input:
 Copy
 F:\\C++ Codes\\Operating System Lab\\x.txt
 F:\\C++ Codes\\x.txt
-
-..............Output:
-File successfully deleted
-
-...............Input:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Output:
+File successfully copied
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Input:
 Move
-E:\\1. Academic\\3-2 Semester\\Operating System\\x.txt
+F:\\C++ Codes\\Operating System Lab\\x.txt
 F:\\C++ Codes\\x.txt
-
-..............Output:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Output:
 File successfully moved
+
 */
+//...
