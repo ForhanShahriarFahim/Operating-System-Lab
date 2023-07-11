@@ -1,62 +1,119 @@
 #include <bits/stdc++.h>
-using namespace std;
-int main() {
-  int no_of_process, quantum, x;
-  cin >> no_of_process >> quantum;
-  queue<pair<int, int>> Burst;
-  vector<int> BurstTime(no_of_process + 1);
-  for (int i = 1; i <= no_of_process; i++) {
-    cin >> x;
-    BurstTime[i] = x;
-    Burst.push({i, x});
-  }
-  int time = 0;
-  vector<int> Time_Break, Task;
-  map<int, int> TurnOver;
-  while (!Burst.empty()) {
-    pair<int, int> a;
-    a = Burst.front();
-    Burst.pop();
-    if (a.second <= quantum) {
-      time += a.second;
-      TurnOver[a.first] = time;
-      Time_Break.push_back(time);
-      Task.push_back(a.first);
 
-    } else {
-      time += quantum;
-      a.second -= quantum;
-      Time_Break.push_back(time);
-      Task.push_back(a.first);
-      Burst.push(a);
+using namespace std;
+
+struct process
+{
+  string id;
+  int burst, waiting, turnaround;
+};
+
+int main()
+{
+  int size;
+  cin >> size;
+  vector<process> x(size);
+  queue<process> waiting_list;
+
+  for (int i = 0; i < size; i++)
+  {
+    cin >> x[i].id >> x[i].burst;
+    waiting_list.push(x[i]);
+  }
+
+  int time_now = 0, quantum = 4;
+  double avg_waiting = 0, avg_turnaround = 0;
+  vector<pair<string, int>> timeline;
+
+  while (!waiting_list.empty())
+  {
+    process now = waiting_list.front();
+    waiting_list.pop();
+    int quantum_now = min(now.burst, quantum);
+    time_now += quantum_now;
+    timeline.push_back({now.id, time_now});
+    now.burst -= quantum_now;
+    if (!now.burst)
+    {
+      for (auto &p : x)
+      {
+        if (p.id == now.id)
+        {
+          p.turnaround = time_now;
+          p.waiting = time_now - p.burst;
+          avg_waiting += p.waiting;
+          avg_turnaround += p.turnaround;
+          break;
+        }
+      }
     }
+    else
+      waiting_list.push(now);
   }
-  cout << "TASK :  ";
-  int avgT = 0, avgW = 0;
-  for (int i = 1; i <= no_of_process; i++) {
-    cout << i << " ";
+
+  string gantt_chart = "|", border = "-";
+  for (auto z : timeline)
+  {
+    gantt_chart += "  " + z.first + "  |";
+    border += "-------";
   }
-  cout << endl << "TURN :  ";
-  for (int i = 1; i <= no_of_process; i++) {
-    cout << TurnOver[i] << " ";
-    avgT += TurnOver[i];
+  cout << "Gantt Chart:\n"
+       << border << "\n"
+       << gantt_chart << "\n"
+       << border << "\n"
+       << "0";
+
+  int index = 0;
+  for (int i = 1; gantt_chart[i]; i++)
+  {
+    if (gantt_chart[i] == '|')
+    {
+      cout << timeline[index].second;
+      if (timeline[index++].second >= 10)
+      {
+        i++;
+      }
+    }
+    else
+      cout << " ";
   }
-  cout << endl << "Wait :  ";
-  for (int i = 1; i <= no_of_process; i++) {
-    cout << TurnOver[i] - BurstTime[i] << " ";
-    avgW += TurnOver[i] - BurstTime[i];
-  }
-  cout << endl;
-  cout << "AVERAGE TURNOVER : " << (double)avgT / no_of_process << endl;
-  cout << "AVG WAITING : " << (double)avgW / no_of_process << endl;
-  cout << "THE GANTTCHART: " << endl << 0;
-  for (int i = 0; i < Time_Break.size(); i++) {
-    cout << "---P" << Task[i] << "---" << Time_Break[i];
+
+  cout << "\n\n"
+       << "Average waiting time = " << avg_waiting / size << "\n"
+       << "Average turnaround time = " << avg_turnaround / size << "\n\n"
+       << "Process   |   Waiting Time   |   Turnaround Time\n"
+       << "------------------------------------------------\n";
+  for (int i = 0; i < size; i++)
+  {
+    cout << x[i].id << "              "
+         << x[i].waiting << "                   "
+         << x[i].turnaround << "\n";
   }
 }
 
-/*
-Input: 
-3 2
-7 5 6 
+/*//... Sample Input-Output:
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Input:
+3
+P1 24
+P2 3
+P3 3
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________
+Output:
+Gantt Chart:
+---------------------------------------------------------
+|  P1  |  P2  |  P3  |  P1  |  P1  |  P1  |  P1  |  P1  |
+---------------------------------------------------------
+0      4      7      10     14     18     22     26     30
+
+Average waiting time = 5.66667
+Average turnaround time = 15.6667
+
+Process   |   Waiting Time   |   Turnaround Time
+------------------------------------------------
+P1              6                   30
+P2              4                   7
+P3              7                   10
+
 */
+//...
