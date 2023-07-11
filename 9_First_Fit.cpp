@@ -29,9 +29,7 @@ int main()
 
 /*
 Input:
-7
-12 3 5 32 43 29 7
-27
+                                                                                                           
 
 Output: 
 The process is allocated into 32 mb memory hole.

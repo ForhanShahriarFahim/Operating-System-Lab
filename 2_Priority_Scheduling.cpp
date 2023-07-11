@@ -15,6 +15,7 @@ bool compareProcess(process x, process y)
 
 int main()
 {
+    // freopen("priority.txt","r",stdin);
     int size;
     cin >> size;
     vector<process> x(size);
